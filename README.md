@@ -1,38 +1,46 @@
-# create-svelte
+# PolicyCraft
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+PolicyCraft is a SvelteKit application used to experiment with policy creation, discussion and case management. It relies on Firebase for authentication, data storage and generative AI features.
 
-## Creating a project
+## Setup
 
-If you're seeing this, you've probably already done this step. Congrats!
+1. Install Node.js 18 or later.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the project root and provide your Firebase credentials:
+   ```bash
+   VITE_API_KEY=your-api-key
+   VITE_AUTH_DOMAIN=your-auth-domain
+   VITE_PROJECT_ID=your-project-id
+   VITE_STORAGE_BUCKET=your-storage-bucket
+   VITE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   VITE_APP_ID=your-app-id
+   FIRESTORE_DATABASE_NAME=your-firestore-database-name
+   ```
+   These variables configure the Svelte application and Cloud Functions.
+4. If you plan to use the Firebase Cloud Functions in `functions/`, install its dependencies:
+   ```bash
+   cd functions && npm install
+   ```
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Development
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+Start a development server with hot reloading:
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+## Production Build
 
-To create a production version of your app:
-
+Create an optimized production build:
 ```bash
 npm run build
 ```
+You can preview the build locally with:
+```bash
+npm run preview
+```
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+The project uses Vite and SvelteKit, so you can deploy the generated build folder with an adapter suited for your hosting provider.
