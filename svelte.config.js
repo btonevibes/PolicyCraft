@@ -9,9 +9,15 @@ const config = {
 
 	kit: {
                // Using the static adapter to generate a purely static site.
+               // The fallback option allows dynamic routes to work as a client side app.
                // See https://kit.svelte.dev/docs/adapters for more information about adapters.
-               adapter: adapter()
-	}
+               adapter: adapter({
+                       fallback: 'index.html'
+               }),
+               paths: {
+                       base: process.env.BASE_PATH || '/PolicyCraft'
+               }
+       }
 };
 
 export default config;

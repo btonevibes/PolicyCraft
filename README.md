@@ -46,6 +46,16 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
+## GitHub Pages
+
+This repository is configured to deploy the static build to GitHub Pages using
+the provided workflow in `.github/workflows/deploy.yml`. Every push to the
+`main` branch triggers a build with `BASE_PATH=/PolicyCraft` and publishes the
+contents of the generated `build` directory to the `gh-pages` branch.
+
+To preview the deployment locally run `npm run build` and open the files in the
+`build` directory.
+
 ## Deployment
 
 Build the static site and prepare it for deployment with:
