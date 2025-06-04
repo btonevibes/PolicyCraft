@@ -79,7 +79,7 @@ export const actions: Actions = {
 			method: 'PATCH',
 			body: JSON.stringify({ form, action: 'editPolicy' }),
 			headers: {
-				'Content-Type': 'appplication/json'
+				'Content-Type': 'application/json'
 			}
 		});
 

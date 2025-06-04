@@ -39,7 +39,7 @@ export const actions: Actions = {
 			method: 'POST',
 			body: JSON.stringify({ form }),
 			headers: {
-				'Content-Type': 'appplication/json'
+				'Content-Type': 'application/json'
 			}
 		});
 		const data = await res.json();
@@ -68,7 +68,7 @@ export const actions: Actions = {
 			method: 'POST',
 			body: JSON.stringify({ form }),
 			headers: {
-				'Content-Type': 'appplication/json'
+				'Content-Type': 'application/json'
 			}
 		});
 		const data = await res.json();
@@ -84,7 +84,7 @@ export const actions: Actions = {
 				method: 'POST',
 				body: JSON.stringify({ form: formReason, entity: 'cases', entityId: data.id }),
 				headers: {
-					'Content-Type': 'appplication/json'
+					'Content-Type': 'application/json'
 				}
 			});
 		}
