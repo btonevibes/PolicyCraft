@@ -5,7 +5,7 @@
 
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-// import * as logger from 'firebase-functions/logger';
+import * as logger from 'firebase-functions/logger';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { defineString } from 'firebase-functions/params';
 
@@ -24,7 +24,7 @@ const db = getFirestore('policycraft');
 // 	(event) => {
 // 		const snapshot = event.data;
 // 		if (!snapshot) {
-// 			console.log('No data associated with the event');
+// 			logger.warn('No data associated with the event');
 // 			return;
 // 		}
 // 		// Get an object with the current document values.
@@ -61,7 +61,7 @@ exports.policycraftNotificationTrigger = onDocumentCreated(
 	(event) => {
 		const snapshot = event.data;
 		if (!snapshot) {
-			console.log('No data associated with the event');
+			logger.warn('No data associated with the event');
 			return;
 		}
 
@@ -92,11 +92,11 @@ exports.policycraftNotificationTrigger = onDocumentCreated(
 						}
 					} else {
 						// doc.data() will be undefined in this case
-						console.log('No such document!');
+						logger.error('No such document!');
 					}
 				})
 				.catch((error) => {
-					console.log('Error getting document:', error);
+					logger.error('Error getting document:', error);
 				});
 			return;
 		} else if (data.action == 'createComment') {

@@ -26,8 +26,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 				dd.id = discussionId;
 				discussions.push(dd);
 			} else {
-				const dd = await response.json();
-				console.log(dd.message);
+				await response.json();
 			}
 		}
 
@@ -39,8 +38,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 				rr.id = reasonId;
 				reasons.push(rr);
 			} else {
-				const rr = await response.json();
-				console.log(rr.message);
+				await response.json();
 			}
 		}
 
@@ -71,7 +69,11 @@ export const actions: Actions = {
 			body: JSON.stringify({ form, entity: 'cases', entityId: event.params.caseId }),
 			headers: { 'Content-Type': 'application/json' }
 		});
-		const data = await res.json();
+
+		if (!res.ok) {
+			const data = await res.json().catch(() => ({}));
+			return fail(res.status, { form, message: data.message ?? 'Failed to create message' });
+		}
 
 		return {
 			form
@@ -91,7 +93,10 @@ export const actions: Actions = {
 			headers: { 'Content-Type': 'application/json' }
 		});
 
-		const data = await res.json();
+		if (!res.ok) {
+			const data = await res.json().catch(() => ({}));
+			return fail(res.status, { form, message: data.message ?? 'Failed to create discussion' });
+		}
 
 		return {
 			form
@@ -105,13 +110,18 @@ export const actions: Actions = {
 			});
 		}
 
-		await event.fetch(`/api/reasons`, {
+		const res = await event.fetch(`/api/reasons`, {
 			method: 'POST',
 			body: JSON.stringify({ form, entity: 'cases', entityId: event.params.caseId }),
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		});
+
+		if (!res.ok) {
+			const data = await res.json().catch(() => ({}));
+			return fail(res.status, { form, message: data.message ?? 'Failed to create reason' });
+		}
 
 		return {
 			form
