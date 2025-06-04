@@ -13,6 +13,15 @@ npm create svelte@latest
 # create a new project in my-app
 npm create svelte@latest my-app
 ```
+## Environment variables
+
+Copy .env.example to .env and fill in your Firebase values:
+
+```bash
+cp .env.example .env
+```
+Then edit `.env` with your credentials.
+
 
 ## Developing
 
