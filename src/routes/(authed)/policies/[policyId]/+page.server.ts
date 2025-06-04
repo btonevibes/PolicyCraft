@@ -33,8 +33,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 				cc.reasons = reasons;
 				cases.push(cc);
 			} else {
-				const cc = await response.json();
-				console.log(cc.message);
+				await response.json();
 			}
 		}
 
@@ -46,8 +45,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 				dd.id = discussionId;
 				discussions.push(dd);
 			} else {
-				const dd = await response.json();
-				console.log(dd.message);
+				await response.json();
 			}
 		}
 
@@ -59,8 +57,7 @@ export const load: PageServerLoad = async ({ params, fetch, locals }) => {
 				rr.id = reasonId;
 				reasons.push(rr);
 			} else {
-				const rr = await response.json();
-				console.log(rr.message);
+				await response.json();
 			}
 		}
 
@@ -90,7 +87,11 @@ export const actions: Actions = {
 			method: 'PATCH',
 			body: JSON.stringify({ form, entity: 'policies', entityId: event.params.policyId })
 		});
-		const data = await res.json();
+
+		if (!res.ok) {
+			const data = await res.json().catch(() => ({}));
+			return fail(res.status, { form, message: data.message ?? 'Failed to create message' });
+		}
 
 		return { form };
 	},
@@ -107,7 +108,10 @@ export const actions: Actions = {
 			body: JSON.stringify({ form, entity: 'policies', entityId: event.params.policyId })
 		});
 
-		const data = await res.json();
+		if (!res.ok) {
+			const data = await res.json().catch(() => ({}));
+			return fail(res.status, { form, message: data.message ?? 'Failed to create discussion' });
+		}
 
 		return { form };
 	},
@@ -121,10 +125,15 @@ export const actions: Actions = {
 			return fail(400, form);
 		}
 
-		await event.fetch(`/api/reasons`, {
+		const res = await event.fetch(`/api/reasons`, {
 			method: 'POST',
 			body: JSON.stringify({ form, entity: 'policies', entityId: event.params.policyId })
 		});
+
+		if (!res.ok) {
+			const data = await res.json().catch(() => ({}));
+			return fail(res.status, { form, message: data.message ?? 'Failed to create reason' });
+		}
 
 		return { form };
 	}
