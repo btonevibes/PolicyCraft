@@ -2,14 +2,14 @@ import { initializeApp, getApps, deleteApp, type FirebaseApp } from 'firebase/ap
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getVertexAI, getGenerativeModel } from 'firebase/vertexai-preview';
-import {
-	VITE_API_KEY,
-	VITE_AUTH_DOMAIN,
-	VITE_PROJECT_ID,
-	VITE_STORAGE_BUCKET,
-	VITE_MESSAGING_SENDER_ID,
-	VITE_APP_ID
-} from '$env/static/private';
+const {
+        VITE_API_KEY,
+        VITE_AUTH_DOMAIN,
+        VITE_PROJECT_ID,
+        VITE_STORAGE_BUCKET,
+        VITE_MESSAGING_SENDER_ID,
+        VITE_APP_ID
+} = import.meta.env;
 
 const firebaseConfig = {
 	apiKey: VITE_API_KEY,
