@@ -50,6 +50,31 @@ export async function GET() {
 					req.on('error', reject);
 				})
 		),
+		check(
+			'models',
+			async () =>
+				(
+					await fetch('https://generativelanguage.googleapis.com/v1beta/models', {
+						headers: { 'x-goog-api-key': env.GEMINI_API_KEY },
+						signal: AbortSignal.timeout(7000)
+					})
+				).status
+		),
+		check(
+			'flash-lite',
+			async () =>
+				(
+					await fetch(
+						'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
+						{
+							method: 'POST',
+							headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+							body: JSON.stringify({ contents: [{ parts: [{ text: 'Say hello.' }] }] }),
+							signal: AbortSignal.timeout(7000)
+						}
+					)
+				).status
+		),
 		check('gemini', async () => (await generateGeminiText('Say hello.', env.GEMINI_API_KEY)).length)
 	]);
 	return json(results);
