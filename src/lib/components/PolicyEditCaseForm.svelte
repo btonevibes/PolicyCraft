@@ -23,14 +23,12 @@
 		type FormResult
 	} from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import SuperDebug from 'sveltekit-superforms';
-	import { browser } from '$app/environment';
-	import { Plus, Search, LoaderCircle, Ellipsis, Meh, Pencil } from 'lucide-svelte';
+	import { Plus, Search, LoaderCircle, Pencil } from 'lucide-svelte';
 	import type { ActionData } from '../../routes/(authed)/policies/[policyId]/editcase/$types';
 
 	export let data: SuperValidated<Infer<PolicyEditCaseFormSchema>>;
 	export let policy;
-	export let allCases: any[];
+	export let allCases: import('$lib/types').CaseSummary[];
 	export let dataNewCase: SuperValidated<Infer<RelatedCaseCreateFormSchema>>;
 	export let userId;
 	export let userRole;
@@ -47,7 +45,7 @@
 	const form = superForm(data, {
 		dataType: 'json',
 		validators: zodClient(policyEditCaseFormSchema),
-		onSubmit({ formData }) {
+		onSubmit({ formData: submissionData }) {
 			disalbeSubmitButton = true;
 			const casesAfterEdit = $formData.cases.map((c) => c.caseId);
 			const addedCaseId = casesAfterEdit.filter((c) => !casesBeforeEdit.has(c));
@@ -60,9 +58,9 @@
 					removedCaseId.push(keys);
 				}
 			});
-			formData.set('addedCaseId', JSON.stringify(addedCaseId));
-			formData.set('editedCaseId', JSON.stringify(editedCaseId));
-			formData.set('removedCaseId', JSON.stringify(removedCaseId));
+			submissionData.set('addedCaseId', JSON.stringify(addedCaseId));
+			submissionData.set('editedCaseId', JSON.stringify(editedCaseId));
+			submissionData.set('removedCaseId', JSON.stringify(removedCaseId));
 		},
 		onError() {
 			disalbeSubmitButton = false;
@@ -134,11 +132,11 @@
 		{:else}
 			<ScrollArea orientation="horizontal" class="rounded-lg md:w-[60vw]">
 				<div class="flex space-x-2 pb-4 w-[60vw]">
-					{#each $formData.cases as _, i}
+					{#each $formData.cases as caseItem, i}
 						<div class="basis-full md:basis-1/3 flex-none">
 							<div class="relative h-full">
 								<CaseCard
-									{...allCases.find((c) => $formData.cases[i].caseId == c.id)}
+									{...allCases.find((c) => caseItem.caseId == c.id)}
 									label={$formData.cases[i].label}
 									{userId}
 									{userRole}

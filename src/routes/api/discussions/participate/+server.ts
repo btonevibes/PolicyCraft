@@ -11,8 +11,8 @@ export const GET = async ({ locals }) => {
 			// not initiated by the user
 			const q = query(collection(db, 'discussions'), where('userId', '!=', locals.user.userId));
 			const querySnapshot = await getDocs(q);
-			const discussions: any[] = [];
-			const res: any[] = [];
+			const discussions: Array<{ id: string }> = [];
+			const res: unknown[] = [];
 
 			querySnapshot.forEach((doc) => {
 				const discussion = { id: doc.id, ...doc.data() };

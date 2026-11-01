@@ -7,8 +7,6 @@
 	import { LoaderCircle } from 'lucide-svelte';
 	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import SuperDebug from 'sveltekit-superforms';
-	import { browser } from '$app/environment';
 
 	export let data: SuperValidated<Infer<PolicyCreateFormSchema>>;
 

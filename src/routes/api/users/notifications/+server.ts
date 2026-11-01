@@ -6,7 +6,7 @@ export const GET = async ({ locals }) => {
 	if (!locals.user) {
 		throw error(400, 'User authentication error.');
 	}
-	const res: any[] = [];
+	const res: unknown[] = [];
 
 	const q = query(
 		collection(db, 'users', locals.user?.userId, 'notifications'),

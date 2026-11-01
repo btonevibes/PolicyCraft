@@ -18,6 +18,6 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		user: locals.user,
 		stage: locals.stage,
 		userDisplayNames: userDisplayNames,
-		userCounts: userDisplayNames.size - adminCount
+		userCounts: Math.max(userDisplayNames.size - adminCount, 1)
 	};
 };

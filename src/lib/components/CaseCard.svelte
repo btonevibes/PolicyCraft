@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { percent } from '$lib/percent.js';
 	import * as Card from '$lib/components/ui/card';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import * as Dialog from '$lib/components/ui/dialog';
@@ -19,13 +20,14 @@
 		ThumbsUp,
 		Sticker
 	} from 'lucide-svelte/icons';
+	import type { Reason } from '$lib/types';
 	import type { Timestamp } from 'firebase/firestore';
 
 	export let id = '';
-	export let createAt: Timestamp;
+	export let createAt: Timestamp | undefined = undefined;
 	export let description = '';
-	export let discussions: string[];
-	export let reasons: any[];
+	export let discussions: string[] = [];
+	export let reasons: Reason[] = [];
 	export let title = '';
 	export let votes = {
 		allow: [] as string[],
@@ -37,6 +39,12 @@
 	export let userRole: string;
 	export let userCounts: number;
 	export let hideAlert = false;
+
+	// These fields are part of the case records passed to this component.
+	$: {
+		void createAt;
+		void discussions;
+	}
 
 	let newReason = '';
 	let creatingNewReason = false;
@@ -85,12 +93,12 @@
 	}
 
 	$: totalVotes = votes.allow.length + votes.disallow.length + votes.unsure.length;
-	$: percentAllow = Math.floor((100 / totalVotes) * votes.allow.length);
-	$: percentDisallow = Math.floor((100 / totalVotes) * votes.disallow.length);
-	$: percentUnsure = Math.floor((100 / totalVotes) * votes.unsure.length);
-	$: barAllow = Math.floor((100 / userCounts) * votes.allow.length);
-	$: barDisallow = Math.floor((100 / userCounts) * votes.disallow.length);
-	$: barUnsure = Math.floor((100 / userCounts) * votes.unsure.length);
+	$: percentAllow = percent(votes.allow.length, totalVotes);
+	$: percentDisallow = percent(votes.disallow.length, totalVotes);
+	$: percentUnsure = percent(votes.unsure.length, totalVotes);
+	$: barAllow = percent(votes.allow.length, userCounts);
+	$: barDisallow = percent(votes.disallow.length, userCounts);
+	$: barUnsure = percent(votes.unsure.length, userCounts);
 
 	$: reasonsAllow = reasons.filter((r) => r.label == 'allow');
 	$: reasonsDisallow = reasons.filter((r) => r.label == 'disallow');

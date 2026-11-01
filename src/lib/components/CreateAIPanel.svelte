@@ -8,7 +8,7 @@
 	export let cases;
 	export let policies;
 
-	let messageHistory: any[] = [
+	let messageHistory = [
 		{
 			person: 'AI Assistant',
 			message: `I am an AI assistant who can help brainstorm a new policy based on selected cases, or brainstorm a new case based on a given policy. To get started, please choose whether you would like to create a policy or a case.`

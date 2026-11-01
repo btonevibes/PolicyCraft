@@ -17,8 +17,9 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { CircleHelp, LoaderCircle, Plus, Send } from 'lucide-svelte/icons';
 	import { invalidateAll } from '$app/navigation';
+	import type { Discussion } from '$lib/types';
 
-	export let discussions: any[] = [];
+	export let discussions: Discussion[] = [];
 	export let dataMessage: SuperValidated<Infer<MessageCreateFormSchema>>;
 	export let dataDiscussion: SuperValidated<Infer<DiscussionCreateFormSchema>>;
 	export let userId;

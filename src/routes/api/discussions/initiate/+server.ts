@@ -10,7 +10,7 @@ export const GET = async ({ locals }) => {
 	try {
 		const q = query(collection(db, 'discussions'), where('userId', '==', locals.user.userId));
 		const querySnapshot = await getDocs(q);
-		const res: any[] = [];
+		const res: unknown[] = [];
 		querySnapshot.forEach((doc) => {
 			const discussion = { id: doc.id, ...doc.data() };
 			res.push(discussion);

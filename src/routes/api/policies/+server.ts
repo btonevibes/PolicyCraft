@@ -8,7 +8,7 @@ export const GET = async ({ locals }) => {
 		const querySnapshot = await getDocs(
 			query(collection(db, 'policies'), orderBy('createAt', 'desc'))
 		);
-		const res: any[] = [];
+		const res: unknown[] = [];
 		querySnapshot.forEach((doc) => {
 			const policy = { id: doc.id, ...doc.data() };
 			if (locals.stage !== 'vote' || (locals.stage == 'vote' && doc.data().cases.length > 0)) {

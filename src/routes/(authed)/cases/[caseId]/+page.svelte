@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { percent } from '$lib/percent.js';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { Check, Ban, Meh, Folder } from 'lucide-svelte/icons';
@@ -58,12 +59,12 @@
 
 	$: totalVotes =
 		data.c.votes.allow.length + data.c.votes.disallow.length + data.c.votes.unsure.length;
-	$: percentAllow = Math.floor((100 / totalVotes) * data.c.votes.allow.length);
-	$: percentDisallow = Math.floor((100 / totalVotes) * data.c.votes.disallow.length);
-	$: percentUnsure = Math.floor((100 / totalVotes) * data.c.votes.unsure.length);
-	$: barAllow = Math.floor((100 / data.userCounts) * data.c.votes.allow.length);
-	$: barDisallow = Math.floor((100 / data.userCounts) * data.c.votes.disallow.length);
-	$: barUnsure = Math.floor((100 / data.userCounts) * data.c.votes.unsure.length);
+	$: percentAllow = percent(data.c.votes.allow.length, totalVotes);
+	$: percentDisallow = percent(data.c.votes.disallow.length, totalVotes);
+	$: percentUnsure = percent(data.c.votes.unsure.length, totalVotes);
+	$: barAllow = percent(data.c.votes.allow.length, data.userCounts);
+	$: barDisallow = percent(data.c.votes.disallow.length, data.userCounts);
+	$: barUnsure = percent(data.c.votes.unsure.length, data.userCounts);
 </script>
 
 <div>

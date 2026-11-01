@@ -9,7 +9,7 @@
 	export let policyDescription;
 	export let policyId;
 
-	let messageHistory: any[] =
+	let messageHistory =
 		cases.size > 0
 			? [
 					{
@@ -28,7 +28,7 @@
 	let showCaseSelector = cases.size > 0 ? true : false;
 	let selectedCaseId: string;
 	let selectedCaseLabel: string;
-	let selectedCaseReasons: any[] = [];
+	let selectedCaseReasons: import('$lib/types').Reason[] = [];
 	let selectedCaseReason: string;
 	let showMisalignSelector = false;
 	let showLinktoEditCase = false;
@@ -208,7 +208,7 @@
 						<Select.Value placeholder="Select a related case" />
 					</Select.Trigger>
 					<Select.Content>
-						{#each [...cases] as [caseId, c], i}
+						{#each [...cases] as [caseId, c]}
 							<Select.Item value={caseId} label={c.title} />
 						{/each}
 					</Select.Content>

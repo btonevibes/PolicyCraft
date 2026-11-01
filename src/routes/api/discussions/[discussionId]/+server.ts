@@ -18,7 +18,7 @@ export const GET = async ({ params }) => {
 
 	const subColRef = collection(db, 'discussions', params.discussionId, 'comments');
 	const querySnapshot = await getDocs(query(subColRef, orderBy('createAt')));
-	const comments: any[] = [];
+	const comments: unknown[] = [];
 	querySnapshot.forEach((doc) => {
 		comments.push(doc.data());
 	});

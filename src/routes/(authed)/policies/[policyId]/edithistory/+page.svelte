@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types.js';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import * as Table from '$lib/components/ui/table';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import { Folder, BookText } from 'lucide-svelte/icons';
 	export let data: PageData;

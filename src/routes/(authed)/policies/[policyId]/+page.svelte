@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { percent } from '$lib/percent.js';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
@@ -64,10 +65,10 @@
 		userVote = undefined;
 	}
 	$: totalVotes = data.policy.votes.upvote.length + data.policy.votes.downvote.length;
-	$: percentUpvote = Math.floor((100 / totalVotes) * data.policy.votes.upvote.length);
-	$: percentDownvote = Math.floor((100 / totalVotes) * data.policy.votes.downvote.length);
-	$: barUpvote = Math.floor((100 / data.userCounts) * data.policy.votes.upvote.length);
-	$: barDownvote = Math.floor((100 / data.userCounts) * data.policy.votes.downvote.length);
+	$: percentUpvote = percent(data.policy.votes.upvote.length, totalVotes);
+	$: percentDownvote = percent(data.policy.votes.downvote.length, totalVotes);
+	$: barUpvote = percent(data.policy.votes.upvote.length, data.userCounts);
+	$: barDownvote = percent(data.policy.votes.downvote.length, data.userCounts);
 </script>
 
 <div class="grid md:grid-cols-4">

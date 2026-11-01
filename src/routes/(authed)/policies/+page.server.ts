@@ -8,13 +8,13 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 
 		for (const policy of policies) {
 			if (locals.stage !== 'vote') {
-				let cases = [];
+				const cases = [];
 				for (const c of policy.cases) {
 					const resCase = await fetch(`/api/cases/${c.caseId}`);
 					if (resCase.ok) {
 						const cc = await resCase.json();
 						cc.label = c.label;
-						let reasons = [];
+						const reasons = [];
 						for (const reasonId of cc.reasons) {
 							const resReason = await fetch(`/api/reasons/${reasonId}`);
 							if (resReason.ok) {

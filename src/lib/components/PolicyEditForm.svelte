@@ -15,8 +15,6 @@
 	import { CircleAlert, LoaderCircle } from 'lucide-svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import Button from './ui/button/button.svelte';
-	import SuperDebug from 'sveltekit-superforms';
-	import { browser } from '$app/environment';
 
 	export let data: SuperValidated<Infer<PolicyEditFormSchema>>;
 	export let cases;
@@ -252,11 +250,11 @@
 		{#if $formData.cases.length !== 0}
 			<ScrollArea orientation="horizontal" class="rounded-lg md:w-[60vw]">
 				<div class="flex space-x-2 pb-4 w-[60vw]">
-					{#each $formData.cases as _, i}
+					{#each $formData.cases as caseItem, i}
 						<div class="basis-full md:basis-1/3 flex-none">
 							<div class="relative h-full">
 								<CaseCard
-									{...cases.get($formData.cases[i].caseId)}
+									{...cases.get(caseItem.caseId)}
 									label={$formData.cases[i].label}
 									{userId}
 									{userRole}
@@ -293,12 +291,12 @@
 			<div class="flex justify-center">
 				<Carousel.Root class="w-[70vw] md:w-[50vw]" bind:api>
 					<Carousel.Content>
-						{#each $formData.cases as _, i}
+						{#each $formData.cases as caseItem, i}
 							<Carousel.Item>
 								<Card.Root class="h-full">
 									<Card.Content class="p-4 grid md:grid-cols-2">
 										<CaseCard
-											{...cases.get($formData.cases[i].caseId)}
+											{...cases.get(caseItem.caseId)}
 											bind:label={$formData.cases[i].label}
 											{userId}
 											{userRole}

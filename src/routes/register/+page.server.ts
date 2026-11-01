@@ -5,7 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { userSignUpFormSchema } from '$lib/schema.js';
 import { auth, db } from '$lib/firebase';
 import { serverTimestamp, setDoc, doc, getDoc } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export const load: PageServerLoad = async () => {
 	return {

@@ -22,12 +22,19 @@ export default [
 	{
 		files: ['**/*.svelte'],
 		languageOptions: {
+			globals: { $$Generic: 'readonly' },
 			parserOptions: {
 				parser: ts.parser
 			}
+		},
+		rules: {
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{ varsIgnorePattern: '^\\$\\$(Props|Events|Slots)$' }
+			]
 		}
 	},
 	{
-		ignores: ['build/', '.svelte-kit/', 'dist/']
+		ignores: ['build/', '.svelte-kit/', '.netlify/', 'dist/']
 	}
 ];

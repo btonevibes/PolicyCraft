@@ -8,7 +8,7 @@ export const GET = async () => {
 		const querySnapshot = await getDocs(
 			query(collection(db, 'cases'), orderBy('createAt', 'desc'))
 		);
-		const res: any[] = [];
+		const res: unknown[] = [];
 		querySnapshot.forEach((doc) => {
 			const c = { id: doc.id, ...doc.data() };
 			res.push(c);

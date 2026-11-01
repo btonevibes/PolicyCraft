@@ -15,15 +15,16 @@
 		Minimize2
 	} from 'lucide-svelte/icons';
 	import CaseCard from './CaseCard.svelte';
+	import type { CaseSummary } from '$lib/types';
 	import type { Timestamp } from 'firebase/firestore';
 
 	export let id = '';
-	export let cases: any[] = [];
-	export let createAt: Timestamp;
+	export let cases: CaseSummary[] = [];
+	export let createAt: Timestamp | undefined = undefined;
 	export let description = '';
-	export let discussions: any[];
-	export let openDiscussions: any[] = [];
-	export let reasons: string[];
+	export let discussions: string[] = [];
+	export let openDiscussions: Array<{ title: string }> = [];
+	export let reasons: string[] = [];
 	export let title = '';
 	export let votes = {
 		upvote: [] as string[],
@@ -35,6 +36,13 @@
 	export let userRole: string;
 	export let stage: string;
 	export let userCounts: number;
+
+	// These fields are part of the policy records passed to this component.
+	$: {
+		void createAt;
+		void discussions;
+		void reasons;
+	}
 
 	let compactView = true;
 	let userVote: 'upvote' | 'downvote' | undefined;
@@ -184,7 +192,7 @@
 						<Carousel.Content>
 							{#each cases as c}
 								<Carousel.Item class="md:basis-1/2 lg:basis-1/3">
-									<CaseCard {...c} {userId} {userCounts}></CaseCard>
+									<CaseCard {...c} {userId} {userRole} {userCounts}></CaseCard>
 								</Carousel.Item>
 							{/each}
 						</Carousel.Content>

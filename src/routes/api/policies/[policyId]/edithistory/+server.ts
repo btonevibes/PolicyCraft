@@ -1,9 +1,9 @@
 import { json } from '@sveltejs/kit';
-import { and, collection, getDocs, or, orderBy, query, where } from 'firebase/firestore';
+import { and, collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '$lib/firebase';
 
 export const GET = async ({ params }) => {
-	const res: any[] = [];
+	const res: unknown[] = [];
 	// const q1 = query(collection(db, 'actionLogs'),where('targetDocumentId', '==', params.policyId))
 	// const q2 = query(collection(db, 'actionLogs'),where('action', '!=', 'votePolicy'))
 	const querySnapshot = await getDocs(

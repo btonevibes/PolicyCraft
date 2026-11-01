@@ -12,7 +12,7 @@
 
 	export let targetEntity;
 	export let label1, label2;
-	export let reasons: any[] = [];
+	export let reasons: import('$lib/types').Reason[] = [];
 	export let dataReason: SuperValidated<Infer<ReasonCreateFormSchema>>;
 	export let userId;
 	export let userDisplayNames;
