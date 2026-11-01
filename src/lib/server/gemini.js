@@ -12,7 +12,11 @@ export async function generateGeminiText(prompt, apiKey, fetchImpl = fetch) {
 		{
 			method: 'POST',
 			headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
-			body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+			body: JSON.stringify({
+				contents: [{ parts: [{ text: prompt }] }],
+				generationConfig: { thinkingConfig: { thinkingLevel: 'low' } }
+			}),
+			signal: AbortSignal.timeout(20000)
 		}
 	);
 	if (!response.ok) throw new Error('AI request is unavailable');
