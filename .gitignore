@@ -9,10 +9,12 @@ node_modules
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 /.firebase
+/.netlify
 .firebaserc
 firebase-debug.log
 firebase.json
 firestore.indexes.json
 firestore.rules
+!config/firestore.rules
 /public
 docs/

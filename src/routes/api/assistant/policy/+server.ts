@@ -1,4 +1,5 @@
-import { model } from '$lib/firebase';
+import { env } from '$env/dynamic/private';
+import { generateGeminiText } from '$lib/server/gemini.js';
 import { json, error } from '@sveltejs/kit';
 
 export const POST = async ({ request, locals }) => {
@@ -7,9 +8,7 @@ export const POST = async ({ request, locals }) => {
 	}
 	try {
 		const { prompt } = await request.json();
-		const result = await model.generateContent(prompt);
-		const response = result.response;
-		const text = response.text();
+		const text = await generateGeminiText(prompt, env.GEMINI_API_KEY);
 
 		return json({ text: text }, { status: 201 });
 	} catch {

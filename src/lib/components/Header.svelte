@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
-	import { Activity, Bell, LogOut, Plus } from 'lucide-svelte/icons';
+	import { Activity, Bell, Plus } from 'lucide-svelte/icons';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Menu, Home, Folders, BookText } from 'lucide-svelte/icons';
@@ -93,13 +93,6 @@
 								goto('/activities');
 							}}><Activity class="h-4 w-4 mr-2" />Activities</DropdownMenu.Item
 						>
-						<DropdownMenu.Item class="w-full">
-							<form action="/logout" method="POST" class="w-full">
-								<button class="w-full flex justify-start"
-									><LogOut class="h-4 w-4 mr-2" />Logout</button
-								>
-							</form>
-						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>

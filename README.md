@@ -1,65 +1,32 @@
-# create-svelte
+# PolicyCraft
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This configuration runs PolicyCraft as a **single-owner, private Netlify project**.
+Netlify's private-project access control is the sign-in boundary for the entire
+site, including its API routes. The server uses a dedicated Firebase account;
+Firestore rules must limit access to that account's UID.
 
-## Creating a project
+**Do not deploy this configuration as a public Netlify project.** The
+`POLICYCRAFT_PRIVATE_DEPLOYMENT` variable is an operator assertion, not an
+authentication mechanism. Verify that an unauthenticated visitor cannot reach
+the site or its function endpoints before publishing or updating the Pages link.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Configuration
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+Set the variables listed in `.env.example` in Netlify. The Firebase service
+password and Gemini key are secrets and must be configured for both builds and
+functions without committing their values. The Firebase web configuration is
+not a secret. The project uses the default Firestore database.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-## Environment variables
+The `meta/about`, `meta/code`, and `users/<service UID>` documents must exist
+before first use. The rules in `config/firestore.rules` restrict Firestore to
+this project's service account. Keep rules restricted to that account and
+test both authorized and anonymous access after any rule change.
 
-Copy .env.example to .env and fill in your Firebase values:
+Install dependencies with `npm ci`, then use `npm run dev` for a local server or
+`npm run build` for the Netlify server build. `node --test tests/*.test.mjs` runs
+the focused backend tests. Local access bypasses Netlify's outer protection, so
+bind the development server to loopback and keep its credentials private.
 
-```bash
-cp .env.example .env
-```
-Then edit `.env` with your credentials.
-
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-## GitHub Pages
-
-This repository is configured to deploy the static build to GitHub Pages using
-the provided workflow in `.github/workflows/deploy.yml`. Every push to the
-`main` branch triggers a build with `BASE_PATH=/PolicyCraft` and publishes the
-contents of the generated `build` directory to the `gh-pages` branch.
-
-To preview the deployment locally run `npm run build` and open the files in the
-`build` directory.
-
-## Deployment
-
-Build the static site and prepare it for deployment with:
-
-```bash
-npm run build
-```
+The Gemini Developer API can use its free tier while the project has no Cloud
+Billing account. Prompts and responses may be used by Google to improve its
+products; see the provider's current terms and quotas before using it.

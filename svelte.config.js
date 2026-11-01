@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-netlify';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,16 +8,8 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-               // Using the static adapter to generate a purely static site.
-               // The fallback option allows dynamic routes to work as a client side app.
-               // See https://kit.svelte.dev/docs/adapters for more information about adapters.
-               adapter: adapter({
-                       fallback: 'index.html'
-               }),
-               paths: {
-                       base: process.env.BASE_PATH || '/PolicyCraft'
-               }
-       }
+		adapter: adapter()
+	}
 };
 
 export default config;
