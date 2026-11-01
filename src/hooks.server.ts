@@ -2,12 +2,12 @@ import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import { auth, db } from '$lib/firebase';
 import { createServiceAuthenticator } from '$lib/server/service-auth.js';
+import { isOwnerAuthorized } from '$lib/server/site-access.js';
 import { error, redirect, type Handle } from '@sveltejs/kit';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
-// The deployed site must be private at the Netlify edge. The dedicated Firebase
-// account is allowed by Firestore rules and is never exposed to the browser.
+// Firestore rules permit only this server's dedicated Firebase account.
 const ensureService = createServiceAuthenticator(auth, signInWithEmailAndPassword, {
 	email: env.POLICYCRAFT_SERVICE_EMAIL,
 	password: env.POLICYCRAFT_SERVICE_PASSWORD,
@@ -21,8 +21,29 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
-	if (env.POLICYCRAFT_PRIVATE_DEPLOYMENT !== 'true') {
+	if (
+		env.POLICYCRAFT_PRIVATE_DEPLOYMENT !== 'true' ||
+		!env.POLICYCRAFT_ACCESS_PASSWORD ||
+		env.POLICYCRAFT_ACCESS_PASSWORD.length < 24
+	) {
 		throw error(503, 'Private deployment is not configured.');
+	}
+	if (
+		!isOwnerAuthorized(event.request.headers.get('authorization'), env.POLICYCRAFT_ACCESS_PASSWORD)
+	) {
+		return new Response('Sign in to PolicyCraft.', {
+			status: 401,
+			headers: {
+				'www-authenticate': 'Basic realm="PolicyCraft", charset="UTF-8"',
+				'cache-control': 'no-store'
+			}
+		});
+	}
+	if (
+		!['GET', 'HEAD', 'OPTIONS'].includes(event.request.method) &&
+		event.request.headers.get('origin') !== event.url.origin
+	) {
+		throw error(403, 'Request origin is not allowed.');
 	}
 
 	// The old course sign-in actions change the shared Firebase auth state. They
