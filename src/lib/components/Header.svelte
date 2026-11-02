@@ -3,7 +3,7 @@
 	import { Activity, Bell, Plus } from 'lucide-svelte/icons';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { Menu, Home, Folders, BookText } from 'lucide-svelte/icons';
+	import { Menu, Home, Folders, BookText, Database } from 'lucide-svelte/icons';
 	import * as Sheet from '$lib/components/ui/sheet';
 	import { navigating } from '$app/stores';
 	import logo from '$lib/img/logo.webp';
@@ -47,6 +47,12 @@
 										<a href="/cases" class="p-2 flex items-center hover:bg-sky-100 rounded">
 											<Folders class="w-4 h-4" />
 											<span class="ml-2">Case Repository</span>
+										</a>
+									</li>
+									<li>
+										<a href="/research" class="p-2 flex items-center hover:bg-sky-100 rounded">
+											<Database class="w-4 h-4" />
+											<span class="ml-2">Research Data</span>
 										</a>
 									</li>
 								</ui>
