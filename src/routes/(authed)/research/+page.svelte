@@ -158,6 +158,18 @@
 		const n = Number(value);
 		return Number.isFinite(n) ? n : null;
 	}
+	function loadedDate(value: string) {
+		if (!value) return 'unknown';
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+		const parsed = new Date(value);
+		if (Number.isNaN(parsed.getTime())) return 'unknown';
+		return new Intl.DateTimeFormat('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			timeZone: 'America/Los_Angeles'
+		}).format(parsed);
+	}
 	function displayValue(row: Row) {
 		if (row.value === null) return row.raw || '—';
 		if (row.value !== 0 && Math.abs(row.value) < 0.001) return row.value.toPrecision(3);
@@ -299,7 +311,7 @@
 			<p>Compare state policies, public opinion and ideology.</p>
 		</header>
 		<p class="subtle">
-			Historical research data · Loaded {data.updatedAt?.slice(0, 10) || 'unknown'} ·
+			Historical research data · Loaded {loadedDate(data.updatedAt)} ·
 			<a href="https://dynamicdemocracy.shinyapps.io/ShinyApp/" target="_blank" rel="noreferrer"
 				>Dynamic Democracy</a
 			>

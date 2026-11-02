@@ -56,7 +56,9 @@ with sync_playwright() as playwright:
             page.get_by_role('combobox', name='Select Liberalism Type:').click()
             page.get_by_role('option', name=name, exact=True).click()
             if current != name:
-                page.wait_for_function("before => document.querySelector('.dataTables_scrollBody table tbody')?.innerText !== before", arg=before, timeout=60000)
+                page.wait_for_function("before => { const b = document.querySelector('.dataTables_scrollBody table tbody'); return b && b.querySelectorAll('tr').length > 0 && b.innerText !== before; }", arg=before, timeout=60000)
+            page.get_by_role('combobox', name='Show entries').select_option('100')
+            page.wait_for_function("document.querySelectorAll('.dataTables_scrollBody table tbody tr').length >= 90")
         def save(name, required):
             page.wait_for_timeout(2500)
             with page.expect_download(timeout=180000) as event:
@@ -92,6 +94,7 @@ with sync_playwright() as playwright:
                 raise RuntimeError(f'Could not confirm selected ideology type for {filename}.')
         choose_dataset('State Policy Ideology')
         page.get_by_role('combobox', name='Select Liberalism Type:').wait_for(state='visible')
+        page.wait_for_function("() => { const h = document.querySelector('.dataTables_scrollHead'); return h && h.innerText.includes('median') && h.innerText.includes('lower'); }")
         page.get_by_role('combobox', name='Show entries').select_option('100')
         page.wait_for_function("document.querySelectorAll('.dataTables_scrollBody table tbody tr').length >= 90")
         for option, name in [('Constant','policy_constant.csv'),('Evolving','policy_evolving.csv'),('Cultural','policy_cultural.csv'),('Economic','policy_economic.csv')]:
@@ -100,6 +103,7 @@ with sync_playwright() as playwright:
             check_ideology_table(name)
         choose_dataset('Mass Ideology')
         page.get_by_role('combobox', name='Select Liberalism Type:').wait_for(state='visible')
+        page.wait_for_function("() => { const h = document.querySelector('.dataTables_scrollHead'); return h && h.innerText.includes('median') && !h.innerText.includes('lower'); }")
         page.get_by_role('combobox', name='Show entries').select_option('100')
         page.wait_for_function("document.querySelectorAll('.dataTables_scrollBody table tbody tr').length >= 90")
         for option, name in [('Cultural','mass_cultural.csv'),('Economic','mass_economic.csv')]:
