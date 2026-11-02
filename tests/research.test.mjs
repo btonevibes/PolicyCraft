@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { deflateSync } from 'node:zlib';
 import { decodeSeries, decodeSourceRows, isMetricId } from '../src/lib/server/research.js';
 import { collectionsForVersion } from '../src/lib/server/research-store.js';
+import { versionsToPrune } from '../scripts/research-retention.mjs';
 
 test('preserves state, year, and both original Dynamic Democracy values', () => {
 	const values = [
@@ -45,4 +46,17 @@ test('snapshot selection stays within research collections', () => {
 		'research_v0123456789abcdef_extra_metrics'
 	);
 	assert.throws(() => collectionsForVersion('../users'), /Invalid research version/);
+});
+
+test('retention protects the active, rollback and incoming snapshots', () => {
+	const current = '0123456789abcdef',
+		previous = 'abcdef0123456789',
+		incoming = '1111111111111111',
+		old = '2222222222222222';
+	assert.deepEqual(
+		versionsToPrune([current, previous, incoming, old], [current, previous, incoming]),
+		[old]
+	);
+	assert.throws(() => versionsToPrune(['../users'], [current]), /Invalid research version/);
+	assert.throws(() => versionsToPrune([old], []), /active snapshot/);
 });

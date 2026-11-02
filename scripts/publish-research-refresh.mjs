@@ -2,9 +2,10 @@ import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc, getFirestore, setDoc, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDoc, getFirestore, setDoc, writeBatch } from 'firebase/firestore';
 import { decodeSeries, decodeSourceRows } from '../src/lib/server/research.js';
 import { collectionsForVersion } from '../src/lib/server/research-store.js';
+import { pruneResearchSnapshots } from './research-retention.mjs';
 
 const dir = process.argv[2];
 if (!dir) throw new Error('Supply the prepared data directory.');
@@ -103,9 +104,20 @@ await setDoc(doc(db, 'research_refresh_metrics', measuredAt.replace(/[:.]/g, '-'
 	repeatedFieldBytes: performance.dictionary_zlib_bytes
 });
 const current = await getDoc(active);
+const currentVersion = current.exists() ? current.data().version : 'baseline';
+const previousVersion = current.exists() ? current.data().previousVersion : undefined;
+const registry = collection(db, 'research_refresh_versions');
+if (currentVersion !== 'baseline')
+	await setDoc(doc(registry, currentVersion), { version: currentVersion }, { merge: true });
+await pruneResearchSnapshots(db, [currentVersion, previousVersion, version].filter(Boolean));
 if (current.exists() && current.data().version === version) {
 	console.log('Source data unchanged; current snapshot retained.');
 } else {
+	await setDoc(
+		doc(registry, version),
+		{ version, stagedAt: new Date().toISOString() },
+		{ merge: true }
+	);
 	async function writeRecords(name, records, id) {
 		for (let i = 0; i < records.length; i += 20) {
 			const batch = writeBatch(db);
@@ -135,13 +147,22 @@ if (current.exists() && current.data().version === version) {
 	}
 	await writeCatalog(store.catalog, summaries);
 	await writeCatalog(store.extraCatalog, extraSummaries);
-	await setDoc(active, {
+	const activation = writeBatch(db);
+	activation.set(active, {
 		version,
+		previousVersion: currentVersion,
 		updatedAt: new Date().toISOString(),
 		originalCount: original.length,
 		extraCount: extra.length
 	});
+	activation.set(
+		doc(registry, version),
+		{ version, activatedAt: new Date().toISOString() },
+		{ merge: true }
+	);
+	await activation.commit();
 	console.log(`Published research version ${version}.`);
+	await pruneResearchSnapshots(db, [version, currentVersion]);
 }
 await auth.signOut();
 process.exit(0);

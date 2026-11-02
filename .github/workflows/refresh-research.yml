@@ -5,6 +5,7 @@ on:
     - cron: '17 11 3 * *'
 permissions:
   contents: read
+  actions: write
 concurrency:
   group: research-refresh
   cancel-in-progress: false
@@ -13,6 +14,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
+      - name: Keep this schedule active
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/refresh-research.yml/enable"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
